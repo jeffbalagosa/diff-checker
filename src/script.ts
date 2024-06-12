@@ -29,23 +29,23 @@ function compareTexts(original: string, changed: string): string {
     changedLines.push("");
   }
 
-  let addedLines = { count: 0 };
-  let removedLines = { count: 0 };
+  let addedBlocks = 0;
+  let removedBlocks = 0;
 
-  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)", removedLines);
-  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)", addedLines);
+  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)", () => removedBlocks++);
+  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)", () => addedBlocks++);
 
   return `
         <div id="original-result">
             <h3>Original Text</h3>
-            <span style="color: red;"><strong>${removedLines.count}</strong> removals<br></span>
+            <span style="color: red;"><strong>${removedBlocks}</strong> removals<br></span>
             <div class="border">
             <pre>${originalHighlighted}</pre>
             </div>
         </div>
         <div id="changed-result">
             <h3>Changed Text</h3>
-            <span style="color: green;"><strong>${addedLines.count}</strong> additions<br></span>
+            <span style="color: green;"><strong>${addedBlocks}</strong> additions<br></span>
             <div class="border">
             <pre>${changedHighlighted}</pre>
             </div>
@@ -53,16 +53,16 @@ function compareTexts(original: string, changed: string): string {
     `;
 }
 
-function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string, counter: { count: number }): string {
+function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string, incrementCounter: () => void): string {
   let result = "";
   let inBlock = false;
 
   lines1.forEach((line, index) => {
     const indentation = line.match(/^\s*/)?.[0] ?? "";
     if (line !== lines2[index]) {
-      counter.count++;
       if (!inBlock) {
         inBlock = true;
+        incrementCounter();
         result += `<div class="${lineClass}-block" data-start-index="${index}">`;
       }
       result += `<span class="${lineClass}" data-index="${index}" style="background-color: ${highlightColor};">${escapeHtml(line)}</span><br>`;
