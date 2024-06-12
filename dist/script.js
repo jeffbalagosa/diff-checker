@@ -11,23 +11,31 @@ function compareTexts(original, changed) {
     const changedLines = changed.split('\n');
     let addedLines = 0;
     let removedLines = 0;
-    let diffResult = originalLines.map((line, index) => {
+    const originalHighlighted = originalLines.map((line, index) => {
         if (line !== changedLines[index]) {
             removedLines++;
-            return `<span style="color: red; text-decoration: line-through;">${line}</span>`;
+            return `<span style="background-color: rgba(245,61,61,.4);">${line}</span>`;
         }
         return `<span>${line}</span>`;
     }).join('<br>');
-    const additionalLines = changedLines.slice(originalLines.length);
-    if (additionalLines.length > 0) {
-        addedLines += additionalLines.length;
-        additionalLines.forEach(line => {
-            diffResult += `<br><span style="color: green;">${line}</span>`;
-        });
-    }
+    const changedHighlighted = changedLines.map((line, index) => {
+        if (line !== originalLines[index]) {
+            addedLines++;
+            return `<span style="background-color: rgba(0,194,129,.4);">${line}</span>`;
+        }
+        return `<span>${line}</span>`;
+    }).join('<br>');
     return `
-        ${diffResult}
-        <br><br>
+        <div>
+            <h3>Original Text</h3>
+            <pre>${originalHighlighted}</pre>
+        </div>
+        <br>
+        <div>
+            <h3>Changed Text</h3>
+            <pre>${changedHighlighted}</pre>
+        </div>
+        <br>
         <strong>Lines Removed:</strong> ${removedLines}<br>
         <strong>Lines Added:</strong> ${addedLines}
     `;
