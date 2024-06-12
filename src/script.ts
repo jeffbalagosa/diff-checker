@@ -111,15 +111,19 @@ function addClickListeners() {
   });
 }
 
+
 function synchronizeBlocks(block: Element, currentClass: string, targetClass: string) {
   const index = block.getAttribute('data-block-index');
   const targetBlock = document.querySelector(`.${targetClass}-block[data-block-index="${index}"]`);
 
   if (targetBlock) {
-    block.innerHTML = targetBlock.innerHTML;
-    block.removeAttribute('style');
-    targetBlock.removeAttribute('style');
-    console.log(`Replaced block index ${index}`);
+    targetBlock.innerHTML = block.innerHTML;
+
+    // Remove highlighting for the block and its lines
+    block.querySelectorAll(`.${currentClass}`).forEach(line => line.removeAttribute('style'));
+    targetBlock.querySelectorAll(`.${targetClass}`).forEach(line => line.removeAttribute('style'));
+
+    console.log(`Replaced and cleared block index ${index} from ${currentClass} to ${targetClass}`);
   } else {
     console.log(`No target block found for index ${index}`);
   }

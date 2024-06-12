@@ -96,10 +96,10 @@ function synchronizeBlocks(block, currentClass, targetClass) {
     const index = block.getAttribute('data-block-index');
     const targetBlock = document.querySelector(`.${targetClass}-block[data-block-index="${index}"]`);
     if (targetBlock) {
-        block.innerHTML = targetBlock.innerHTML;
-        block.removeAttribute('style');
-        targetBlock.removeAttribute('style');
-        console.log(`Replaced block index ${index}`);
+        targetBlock.innerHTML = block.innerHTML;
+        block.querySelectorAll(`.${currentClass}`).forEach(line => line.removeAttribute('style'));
+        targetBlock.querySelectorAll(`.${targetClass}`).forEach(line => line.removeAttribute('style'));
+        console.log(`Replaced and cleared block index ${index} from ${currentClass} to ${targetClass}`);
     }
     else {
         console.log(`No target block found for index ${index}`);
