@@ -5,12 +5,12 @@ body {
 
 #app {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
 }
 
 textarea {
-    width: 100%;
+    width: 48%;
     height: 150px;
 }
 
