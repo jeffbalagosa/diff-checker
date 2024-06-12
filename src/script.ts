@@ -29,23 +29,18 @@ function compareTexts(original: string, changed: string): string {
     changedLines.push("");
   }
 
-  let addedBlocks = 0;
-  let removedBlocks = 0;
-
-  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)", () => removedBlocks++);
-  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)", () => addedBlocks++);
+  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)");
+  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)");
 
   return `
         <div id="original-result">
             <h3>Original Text</h3>
-            <span style="color: red;"><strong>${removedBlocks}</strong> removals<br></span>
             <div class="border">
             <pre>${originalHighlighted}</pre>
             </div>
         </div>
         <div id="changed-result">
             <h3>Changed Text</h3>
-            <span style="color: green;"><strong>${addedBlocks}</strong> additions<br></span>
             <div class="border">
             <pre>${changedHighlighted}</pre>
             </div>
@@ -53,7 +48,7 @@ function compareTexts(original: string, changed: string): string {
     `;
 }
 
-function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string, incrementCounter: () => void): string {
+function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string): string {
   let result = '';
   let inBlock = false;
   let blockIndex = 0;
@@ -66,7 +61,6 @@ function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, 
         inBlock = true;
       }
       result += `<div class="${lineClass}" style="background-color: ${highlightColor}" data-index="${index}">${escapeHtml(line)}</div>`;
-      incrementCounter();
     } else {
       if (inBlock) {
         result += `</div>`;
@@ -82,8 +76,6 @@ function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, 
   }
   return result;
 }
-
-
 
 function escapeHtml(unsafe: string): string {
   return unsafe.replace(/[&<"']/g, (match) => {
@@ -110,8 +102,6 @@ function addClickListeners() {
     block.addEventListener('click', () => synchronizeBlocks(block, 'changed-line', 'original-line'));
   });
 }
-
-
 
 function synchronizeBlocks(block: Element, currentClass: string, targetClass: string) {
   const index = block.getAttribute('data-block-index');
