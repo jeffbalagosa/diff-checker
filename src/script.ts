@@ -20,6 +20,15 @@ function compareTexts(original: string, changed: string): string {
   const originalLines = trimWhitespace(original).split("\n");
   const changedLines = trimWhitespace(changed).split("\n");
 
+  // Even out the lengths of the original and changed lines
+  const maxLength = Math.max(originalLines.length, changedLines.length);
+  while (originalLines.length < maxLength) {
+    originalLines.push("");
+  }
+  while (changedLines.length < maxLength) {
+    changedLines.push("");
+  }
+
   let addedLines = 0;
   let removedLines = 0;
 
@@ -99,7 +108,6 @@ function addClickListeners() {
 }
 
 function synchronizeBlocks(block: Element, currentClass: string, targetClass: string) {
-  const startIndex = parseInt(block.getAttribute('data-start-index') || "0");
   const lines = block.querySelectorAll(`.${currentClass}`);
 
   lines.forEach(line => {
@@ -116,4 +124,14 @@ function synchronizeBlocks(block: Element, currentClass: string, targetClass: st
       targetLine.removeAttribute('style');
     }
   });
+
+  // Ensure trailing lines are handled correctly
+  const lastLineIndex = parseInt(lines[lines.length - 1].getAttribute('data-index') || "0", 10);
+  for (let i = lastLineIndex + 1; i < lines.length; i++) {
+    const targetLine = document.querySelector(`.${targetClass}[data-index="${i}"]`);
+    if (targetLine) {
+      targetLine.textContent = "";
+      targetLine.removeAttribute('style');
+    }
+  }
 }

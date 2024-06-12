@@ -13,6 +13,13 @@ function trimWhitespace(str) {
 function compareTexts(original, changed) {
     const originalLines = trimWhitespace(original).split("\n");
     const changedLines = trimWhitespace(changed).split("\n");
+    const maxLength = Math.max(originalLines.length, changedLines.length);
+    while (originalLines.length < maxLength) {
+        originalLines.push("");
+    }
+    while (changedLines.length < maxLength) {
+        changedLines.push("");
+    }
     let addedLines = 0;
     let removedLines = 0;
     const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)");
@@ -83,7 +90,6 @@ function addClickListeners() {
     });
 }
 function synchronizeBlocks(block, currentClass, targetClass) {
-    const startIndex = parseInt(block.getAttribute('data-start-index') || "0");
     const lines = block.querySelectorAll(`.${currentClass}`);
     lines.forEach(line => {
         var _a, _b;
@@ -97,4 +103,12 @@ function synchronizeBlocks(block, currentClass, targetClass) {
             targetLine.removeAttribute('style');
         }
     });
+    const lastLineIndex = parseInt(lines[lines.length - 1].getAttribute('data-index') || "0", 10);
+    for (let i = lastLineIndex + 1; i < lines.length; i++) {
+        const targetLine = document.querySelector(`.${targetClass}[data-index="${i}"]`);
+        if (targetLine) {
+            targetLine.textContent = "";
+            targetLine.removeAttribute('style');
+        }
+    }
 }
