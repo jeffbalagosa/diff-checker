@@ -20,6 +20,11 @@ document.getElementById("compareButton")?.addEventListener("click", () => {
   document.getElementById("results")!.innerHTML = result;
 });
 
+// trim leading and trailing whitespace
+function trimWhitespace(str: string): string {
+  return str.replace(/^\s+|\s+$/g, "");
+}
+
 /**
  * Compares two strings, representing original and changed texts, line by line. It highlights
  * the differences between them by wrapping added lines in a green background and removed lines
@@ -32,8 +37,8 @@ document.getElementById("compareButton")?.addEventListener("click", () => {
  *          highlights for differences and annotations for the number of added and removed lines.
  */
 function compareTexts(original: string, changed: string): string {
-  const originalLines = original.split("\n");
-  const changedLines = changed.split("\n");
+  const originalLines = trimWhitespace(original).split("\n");
+  const changedLines = trimWhitespace(changed).split("\n");
 
   let addedLines = 0;
   let removedLines = 0;

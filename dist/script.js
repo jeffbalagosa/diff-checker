@@ -6,9 +6,12 @@ var _a;
     const result = compareTexts(originalText, changedText);
     document.getElementById("results").innerHTML = result;
 });
+function trimWhitespace(str) {
+    return str.replace(/^\s+|\s+$/g, "");
+}
 function compareTexts(original, changed) {
-    const originalLines = original.split("\n");
-    const changedLines = changed.split("\n");
+    const originalLines = trimWhitespace(original).split("\n");
+    const changedLines = trimWhitespace(changed).split("\n");
     let addedLines = 0;
     let removedLines = 0;
     const originalHighlighted = originalLines
