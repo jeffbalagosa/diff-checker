@@ -112,16 +112,36 @@ function addClickListeners() {
 }
 
 
+
 function synchronizeBlocks(block: Element, currentClass: string, targetClass: string) {
   const index = block.getAttribute('data-block-index');
   const targetBlock = document.querySelector(`.${targetClass}-block[data-block-index="${index}"]`);
 
   if (targetBlock) {
+    // Update the target block with the content of the clicked block
     targetBlock.innerHTML = block.innerHTML;
 
-    // Remove highlighting for the block and its lines
-    block.querySelectorAll(`.${currentClass}`).forEach(line => line.removeAttribute('style'));
-    targetBlock.querySelectorAll(`.${targetClass}`).forEach(line => line.removeAttribute('style'));
+    // Remove highlighting for lines within the source block
+    block.querySelectorAll(`.${currentClass}`).forEach(line => {
+      line.removeAttribute('style');
+    });
+
+    // Remove highlighting for lines within the target block
+    targetBlock.querySelectorAll(`.${targetClass}`).forEach(line => {
+      line.removeAttribute('style');
+    });
+
+    // Remove highlighting for the block itself
+    block.removeAttribute('style');
+    targetBlock.removeAttribute('style');
+
+    // Remove block level highlighting if present
+    block.querySelectorAll(`[style]`).forEach(line => {
+      line.removeAttribute('style');
+    });
+    targetBlock.querySelectorAll(`[style]`).forEach(line => {
+      line.removeAttribute('style');
+    });
 
     console.log(`Replaced and cleared block index ${index} from ${currentClass} to ${targetClass}`);
   } else {
