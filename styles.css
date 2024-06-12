@@ -1,19 +1,21 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+  font-family: Arial, sans-serif;
+  margin: 20px;
 }
 
 .flex-container {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
-textarea {
-    width: 48%;
-    height: 150px;
+textarea,
+#original-result,
+#changed-result {
+  width: 48%;
+  height: 150px;
 }
 
 #results {
-    margin-top: 20px;
+  margin-top: 20px;
 }
