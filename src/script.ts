@@ -54,33 +54,36 @@ function compareTexts(original: string, changed: string): string {
 }
 
 function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string, incrementCounter: () => void): string {
-  let result = "";
+  let result = '';
   let inBlock = false;
+  let blockIndex = 0;
 
   lines1.forEach((line, index) => {
-    const indentation = line.match(/^\s*/)?.[0] ?? "";
-    if (line !== lines2[index]) {
+    const otherLine = lines2[index];
+    if (line !== otherLine) {
       if (!inBlock) {
+        result += `<div class="${lineClass}-block" data-block-index="${blockIndex}">`;
         inBlock = true;
-        incrementCounter();
-        result += `<div class="${lineClass}-block" data-start-index="${index}">`;
       }
-      result += `<span class="${lineClass}" data-index="${index}" style="background-color: ${highlightColor};">${escapeHtml(line)}</span><br>`;
+      result += `<div class="${lineClass}" style="background-color: ${highlightColor}" data-index="${index}">${escapeHtml(line)}</div>`;
+      incrementCounter();
     } else {
       if (inBlock) {
-        inBlock = false;
         result += `</div>`;
+        inBlock = false;
+        blockIndex++;
       }
-      result += `<span class="${lineClass}" data-index="${index}">${escapeHtml(line)}</span><br>`;
+      result += `<div class="${lineClass}" data-index="${index}">${escapeHtml(line)}</div>`;
     }
   });
-
   if (inBlock) {
     result += `</div>`;
+    blockIndex++;
   }
-
   return result;
 }
+
+
 
 function escapeHtml(unsafe: string): string {
   return unsafe.replace(/[&<"']/g, (match) => {
@@ -109,30 +112,15 @@ function addClickListeners() {
 }
 
 function synchronizeBlocks(block: Element, currentClass: string, targetClass: string) {
-  const lines = block.querySelectorAll(`.${currentClass}`);
+  const index = block.getAttribute('data-block-index');
+  const targetBlock = document.querySelector(`.${targetClass}-block[data-block-index="${index}"]`);
 
-  lines.forEach(line => {
-    const index = line.getAttribute('data-index');
-    const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
-
-    if (line.textContent && targetLine) {
-      const lineText = line.textContent.trim();
-      const indentation = line.textContent.match(/^\s*/)?.[0] ?? "";
-      targetLine.textContent = indentation + lineText;
-
-      // Remove the highlighting style from both lines
-      line.removeAttribute('style');
-      targetLine.removeAttribute('style');
-    }
-  });
-
-  // Ensure trailing lines are handled correctly
-  const lastLineIndex = parseInt(lines[lines.length - 1].getAttribute('data-index') || "0", 10);
-  for (let i = lastLineIndex + 1; i < lines.length; i++) {
-    const targetLine = document.querySelector(`.${targetClass}[data-index="${i}"]`);
-    if (targetLine) {
-      targetLine.textContent = "";
-      targetLine.removeAttribute('style');
-    }
+  if (targetBlock) {
+    block.innerHTML = targetBlock.innerHTML;
+    block.removeAttribute('style');
+    targetBlock.removeAttribute('style');
+    console.log(`Replaced block index ${index}`);
+  } else {
+    console.log(`No target block found for index ${index}`);
   }
 }

@@ -42,29 +42,31 @@ function compareTexts(original, changed) {
     `;
 }
 function highlightBlocks(lines1, lines2, lineClass, highlightColor, incrementCounter) {
-    let result = "";
+    let result = '';
     let inBlock = false;
+    let blockIndex = 0;
     lines1.forEach((line, index) => {
-        var _a, _b;
-        const indentation = (_b = (_a = line.match(/^\s*/)) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : "";
-        if (line !== lines2[index]) {
+        const otherLine = lines2[index];
+        if (line !== otherLine) {
             if (!inBlock) {
+                result += `<div class="${lineClass}-block" data-block-index="${blockIndex}">`;
                 inBlock = true;
-                incrementCounter();
-                result += `<div class="${lineClass}-block" data-start-index="${index}">`;
             }
-            result += `<span class="${lineClass}" data-index="${index}" style="background-color: ${highlightColor};">${escapeHtml(line)}</span><br>`;
+            result += `<div class="${lineClass}" style="background-color: ${highlightColor}" data-index="${index}">${escapeHtml(line)}</div>`;
+            incrementCounter();
         }
         else {
             if (inBlock) {
-                inBlock = false;
                 result += `</div>`;
+                inBlock = false;
+                blockIndex++;
             }
-            result += `<span class="${lineClass}" data-index="${index}">${escapeHtml(line)}</span><br>`;
+            result += `<div class="${lineClass}" data-index="${index}">${escapeHtml(line)}</div>`;
         }
     });
     if (inBlock) {
         result += `</div>`;
+        blockIndex++;
     }
     return result;
 }
@@ -91,25 +93,15 @@ function addClickListeners() {
     });
 }
 function synchronizeBlocks(block, currentClass, targetClass) {
-    const lines = block.querySelectorAll(`.${currentClass}`);
-    lines.forEach(line => {
-        var _a, _b;
-        const index = line.getAttribute('data-index');
-        const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
-        if (line.textContent && targetLine) {
-            const lineText = line.textContent.trim();
-            const indentation = (_b = (_a = line.textContent.match(/^\s*/)) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : "";
-            targetLine.textContent = indentation + lineText;
-            line.removeAttribute('style');
-            targetLine.removeAttribute('style');
-        }
-    });
-    const lastLineIndex = parseInt(lines[lines.length - 1].getAttribute('data-index') || "0", 10);
-    for (let i = lastLineIndex + 1; i < lines.length; i++) {
-        const targetLine = document.querySelector(`.${targetClass}[data-index="${i}"]`);
-        if (targetLine) {
-            targetLine.textContent = "";
-            targetLine.removeAttribute('style');
-        }
+    const index = block.getAttribute('data-block-index');
+    const targetBlock = document.querySelector(`.${targetClass}-block[data-block-index="${index}"]`);
+    if (targetBlock) {
+        block.innerHTML = targetBlock.innerHTML;
+        block.removeAttribute('style');
+        targetBlock.removeAttribute('style');
+        console.log(`Replaced block index ${index}`);
+    }
+    else {
+        console.log(`No target block found for index ${index}`);
     }
 }
