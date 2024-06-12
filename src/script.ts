@@ -29,23 +29,23 @@ function compareTexts(original: string, changed: string): string {
     changedLines.push("");
   }
 
-  let addedLines = 0;
-  let removedLines = 0;
+  let addedLines = { count: 0 };
+  let removedLines = { count: 0 };
 
-  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)");
-  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)");
+  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)", removedLines);
+  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)", addedLines);
 
   return `
         <div id="original-result">
             <h3>Original Text</h3>
-            <span style="color: red;"><strong>${removedLines}</strong> removals<br></span>
+            <span style="color: red;"><strong>${removedLines.count}</strong> removals<br></span>
             <div class="border">
             <pre>${originalHighlighted}</pre>
             </div>
         </div>
         <div id="changed-result">
             <h3>Changed Text</h3>
-            <span style="color: green;"><strong>${addedLines}</strong> additions<br></span>
+            <span style="color: green;"><strong>${addedLines.count}</strong> additions<br></span>
             <div class="border">
             <pre>${changedHighlighted}</pre>
             </div>
@@ -53,13 +53,14 @@ function compareTexts(original: string, changed: string): string {
     `;
 }
 
-function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string): string {
+function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string, counter: { count: number }): string {
   let result = "";
   let inBlock = false;
 
   lines1.forEach((line, index) => {
     const indentation = line.match(/^\s*/)?.[0] ?? "";
     if (line !== lines2[index]) {
+      counter.count++;
       if (!inBlock) {
         inBlock = true;
         result += `<div class="${lineClass}-block" data-start-index="${index}">`;
