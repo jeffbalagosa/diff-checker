@@ -1,41 +1,21 @@
-/**
- * Adds an event listener to the "compareButton" element. When the button is clicked,
- * it retrieves the text from the "original" and "changed" textarea elements, compares
- * them using the compareTexts function, and then displays the comparison result in the
- * "results" element.
- */
 document.getElementById("compareButton")?.addEventListener("click", () => {
-  // Retrieve the text from the "original" textarea.
   const originalText = (
     document.getElementById("original") as HTMLTextAreaElement
   ).value;
-  // Retrieve the text from the "changed" textarea.
   const changedText = (
     document.getElementById("changed") as HTMLTextAreaElement
   ).value;
 
-  // Compare the original and changed texts.
   const result = compareTexts(originalText, changedText);
-  // Display the comparison result in the "results" element.
   document.getElementById("results")!.innerHTML = result;
+
+  addClickListeners();
 });
 
-// trim leading and trailing whitespace
 function trimWhitespace(str: string): string {
   return str.replace(/^\s+|\s+$/g, "");
 }
 
-/**
- * Compares two strings, representing original and changed texts, line by line. It highlights
- * the differences between them by wrapping added lines in a green background and removed lines
- * in a red background. It returns a string containing HTML markup with both versions of the text
- * and annotations indicating the number of additions and removals.
- *
- * @param original The original text as a string.
- * @param changed The changed text as a string.
- * @returns A string containing HTML markup with the original and changed texts, including
- *          highlights for differences and annotations for the number of added and removed lines.
- */
 function compareTexts(original: string, changed: string): string {
   const originalLines = trimWhitespace(original).split("\n");
   const changedLines = trimWhitespace(changed).split("\n");
@@ -47,9 +27,9 @@ function compareTexts(original: string, changed: string): string {
     .map((line, index) => {
       if (line !== changedLines[index]) {
         removedLines++;
-        return `<span style="background-color: rgba(245,61,61,.4);">${line}</span>`;
+        return `<span class="original-line" data-index="${index}" style="background-color: rgba(245,61,61,.4);">${line}</span>`;
       }
-      return `<span>${line}</span>`;
+      return `<span class="original-line" data-index="${index}">${line}</span>`;
     })
     .join("<br>");
 
@@ -57,9 +37,9 @@ function compareTexts(original: string, changed: string): string {
     .map((line, index) => {
       if (line !== originalLines[index]) {
         addedLines++;
-        return `<span style="background-color: rgba(0,194,129,.4);">${line}</span>`;
+        return `<span class="changed-line" data-index="${index}" style="background-color: rgba(0,194,129,.4);">${line}</span>`;
       }
-      return `<span>${line}</span>`;
+      return `<span class="changed-line" data-index="${index}">${line}</span>`;
     })
     .join("<br>");
 
@@ -79,4 +59,29 @@ function compareTexts(original: string, changed: string): string {
             </div>
         </div>
     `;
+}
+
+function addClickListeners() {
+  const originalLines = document.querySelectorAll('.original-line');
+  const changedLines = document.querySelectorAll('.changed-line');
+
+  originalLines.forEach(line => {
+    line.addEventListener('click', () => synchronizeLines(line, 'original-line', 'changed-line'));
+  });
+
+  changedLines.forEach(line => {
+    line.addEventListener('click', () => synchronizeLines(line, 'changed-line', 'original-line'));
+  });
+}
+
+function synchronizeLines(line: Element, currentClass: string, targetClass: string) {
+  const index = line.getAttribute('data-index');
+  const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
+
+  if (line.textContent && targetLine) {
+    targetLine.textContent = line.textContent;
+
+    line.removeAttribute('style');
+    targetLine.removeAttribute('style');
+  }
 }

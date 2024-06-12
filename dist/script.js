@@ -5,6 +5,7 @@ var _a;
     const changedText = document.getElementById("changed").value;
     const result = compareTexts(originalText, changedText);
     document.getElementById("results").innerHTML = result;
+    addClickListeners();
 });
 function trimWhitespace(str) {
     return str.replace(/^\s+|\s+$/g, "");
@@ -18,18 +19,18 @@ function compareTexts(original, changed) {
         .map((line, index) => {
         if (line !== changedLines[index]) {
             removedLines++;
-            return `<span style="background-color: rgba(245,61,61,.4);">${line}</span>`;
+            return `<span class="original-line" data-index="${index}" style="background-color: rgba(245,61,61,.4);">${line}</span>`;
         }
-        return `<span>${line}</span>`;
+        return `<span class="original-line" data-index="${index}">${line}</span>`;
     })
         .join("<br>");
     const changedHighlighted = changedLines
         .map((line, index) => {
         if (line !== originalLines[index]) {
             addedLines++;
-            return `<span style="background-color: rgba(0,194,129,.4);">${line}</span>`;
+            return `<span class="changed-line" data-index="${index}" style="background-color: rgba(0,194,129,.4);">${line}</span>`;
         }
-        return `<span>${line}</span>`;
+        return `<span class="changed-line" data-index="${index}">${line}</span>`;
     })
         .join("<br>");
     return `
@@ -48,4 +49,23 @@ function compareTexts(original, changed) {
             </div>
         </div>
     `;
+}
+function addClickListeners() {
+    const originalLines = document.querySelectorAll('.original-line');
+    const changedLines = document.querySelectorAll('.changed-line');
+    originalLines.forEach(line => {
+        line.addEventListener('click', () => synchronizeLines(line, 'original-line', 'changed-line'));
+    });
+    changedLines.forEach(line => {
+        line.addEventListener('click', () => synchronizeLines(line, 'changed-line', 'original-line'));
+    });
+}
+function synchronizeLines(line, currentClass, targetClass) {
+    const index = line.getAttribute('data-index');
+    const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
+    if (line.textContent && targetLine) {
+        targetLine.textContent = line.textContent;
+        line.removeAttribute('style');
+        targetLine.removeAttribute('style');
+    }
 }
