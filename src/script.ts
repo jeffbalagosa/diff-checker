@@ -49,6 +49,7 @@ function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, 
   let inBlock = false;
 
   lines1.forEach((line, index) => {
+    const indentation = line.match(/^\s*/)?.[0] ?? "";
     if (line !== lines2[index]) {
       if (!inBlock) {
         inBlock = true;
@@ -106,7 +107,9 @@ function synchronizeBlocks(block: Element, currentClass: string, targetClass: st
     const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
 
     if (line.textContent && targetLine) {
-      targetLine.textContent = line.textContent.trim();
+      const lineText = line.textContent.trim();
+      const indentation = line.textContent.match(/^\s*/)?.[0] ?? "";
+      targetLine.textContent = indentation + lineText;
 
       // Remove the highlighting style from both lines
       line.removeAttribute('style');

@@ -38,6 +38,8 @@ function highlightBlocks(lines1, lines2, lineClass, highlightColor) {
     let result = "";
     let inBlock = false;
     lines1.forEach((line, index) => {
+        var _a, _b;
+        const indentation = (_b = (_a = line.match(/^\s*/)) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : "";
         if (line !== lines2[index]) {
             if (!inBlock) {
                 inBlock = true;
@@ -84,10 +86,13 @@ function synchronizeBlocks(block, currentClass, targetClass) {
     const startIndex = parseInt(block.getAttribute('data-start-index') || "0");
     const lines = block.querySelectorAll(`.${currentClass}`);
     lines.forEach(line => {
+        var _a, _b;
         const index = line.getAttribute('data-index');
         const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
         if (line.textContent && targetLine) {
-            targetLine.textContent = line.textContent.trim();
+            const lineText = line.textContent.trim();
+            const indentation = (_b = (_a = line.textContent.match(/^\s*/)) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : "";
+            targetLine.textContent = indentation + lineText;
             line.removeAttribute('style');
             targetLine.removeAttribute('style');
         }
