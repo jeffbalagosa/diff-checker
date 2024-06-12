@@ -3,7 +3,7 @@ body {
     margin: 20px;
 }
 
-#app {
+.flex-container {
     display: flex;
     flex-direction: row;
     gap: 10px;

@@ -32,15 +32,15 @@ function compareTexts(original: string, changed: string): string {
     return `
         <div>
             <h3>Original Text</h3>
+            <span style="color: red;"><strong>${removedLines}</strong> removals<br></span>
             <pre>${originalHighlighted}</pre>
         </div>
         <br>
         <div>
-            <h3>Changed Text</h3>
+        <h3>Changed Text</h3>
+        <span style="color: green;"><strong>${addedLines}</strong> additions<br></span>
             <pre>${changedHighlighted}</pre>
         </div>
         <br>
-        <strong>Lines Removed:</strong> ${removedLines}<br>
-        <strong>Lines Added:</strong> ${addedLines}
     `;
 }
