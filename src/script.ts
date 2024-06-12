@@ -23,25 +23,8 @@ function compareTexts(original: string, changed: string): string {
   let addedLines = 0;
   let removedLines = 0;
 
-  const originalHighlighted = originalLines
-    .map((line, index) => {
-      if (line !== changedLines[index]) {
-        removedLines++;
-        return `<span class="original-line" data-index="${index}" style="background-color: rgba(245,61,61,.4);">${line}</span>`;
-      }
-      return `<span class="original-line" data-index="${index}">${line}</span>`;
-    })
-    .join("<br>");
-
-  const changedHighlighted = changedLines
-    .map((line, index) => {
-      if (line !== originalLines[index]) {
-        addedLines++;
-        return `<span class="changed-line" data-index="${index}" style="background-color: rgba(0,194,129,.4);">${line}</span>`;
-      }
-      return `<span class="changed-line" data-index="${index}">${line}</span>`;
-    })
-    .join("<br>");
+  const originalHighlighted = highlightBlocks(originalLines, changedLines, "original-line", "rgba(245,61,61,.4)");
+  const changedHighlighted = highlightBlocks(changedLines, originalLines, "changed-line", "rgba(0,194,129,.4)");
 
   return `
         <div id="original-result">
@@ -61,27 +44,73 @@ function compareTexts(original: string, changed: string): string {
     `;
 }
 
-function addClickListeners() {
-  const originalLines = document.querySelectorAll('.original-line');
-  const changedLines = document.querySelectorAll('.changed-line');
+function highlightBlocks(lines1: string[], lines2: string[], lineClass: string, highlightColor: string): string {
+  let result = "";
+  let inBlock = false;
 
-  originalLines.forEach(line => {
-    line.addEventListener('click', () => synchronizeLines(line, 'original-line', 'changed-line'));
+  lines1.forEach((line, index) => {
+    if (line !== lines2[index]) {
+      if (!inBlock) {
+        inBlock = true;
+        result += `<div class="${lineClass}-block" data-start-index="${index}">`;
+      }
+      result += `<span class="${lineClass}" data-index="${index}" style="background-color: ${highlightColor};">${escapeHtml(line)}</span><br>`;
+    } else {
+      if (inBlock) {
+        inBlock = false;
+        result += `</div>`;
+      }
+      result += `<span class="${lineClass}" data-index="${index}">${escapeHtml(line)}</span><br>`;
+    }
   });
 
-  changedLines.forEach(line => {
-    line.addEventListener('click', () => synchronizeLines(line, 'changed-line', 'original-line'));
+  if (inBlock) {
+    result += `</div>`;
+  }
+
+  return result;
+}
+
+function escapeHtml(unsafe: string): string {
+  return unsafe.replace(/[&<"']/g, (match) => {
+    const escapeMap: { [key: string]: string } = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;',
+    };
+    return escapeMap[match];
   });
 }
 
-function synchronizeLines(line: Element, currentClass: string, targetClass: string) {
-  const index = line.getAttribute('data-index');
-  const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
+function addClickListeners() {
+  const originalBlocks = document.querySelectorAll('.original-line-block');
+  const changedBlocks = document.querySelectorAll('.changed-line-block');
 
-  if (line.textContent && targetLine) {
-    targetLine.textContent = line.textContent;
+  originalBlocks.forEach(block => {
+    block.addEventListener('click', () => synchronizeBlocks(block, 'original-line', 'changed-line'));
+  });
 
-    line.removeAttribute('style');
-    targetLine.removeAttribute('style');
-  }
+  changedBlocks.forEach(block => {
+    block.addEventListener('click', () => synchronizeBlocks(block, 'changed-line', 'original-line'));
+  });
+}
+
+function synchronizeBlocks(block: Element, currentClass: string, targetClass: string) {
+  const startIndex = parseInt(block.getAttribute('data-start-index') || "0");
+  const lines = block.querySelectorAll(`.${currentClass}`);
+
+  lines.forEach(line => {
+    const index = line.getAttribute('data-index');
+    const targetLine = document.querySelector(`.${targetClass}[data-index="${index}"]`);
+
+    if (line.textContent && targetLine) {
+      targetLine.textContent = line.textContent.trim();
+
+      // Remove the highlighting style from both lines
+      line.removeAttribute('style');
+      targetLine.removeAttribute('style');
+    }
+  });
 }
