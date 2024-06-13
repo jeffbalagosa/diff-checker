@@ -1,13 +1,11 @@
 import './App.css'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from "@/components/ui/button"
+import { TextPanel } from "@/components/TextPanel/TextPanel"
 
 function App() {
 
   return (
     <>
-      <Textarea />
-      <Button>Compare</Button>
+    <TextPanel />
     </>
   )
 }
