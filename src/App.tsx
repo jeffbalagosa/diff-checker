@@ -1,18 +1,20 @@
 import React from 'react';
 import './App.css';
-import { TextPanel } from "@/components/TextPanel/TextPanel";
+import { TextPanel } from '@/components/TextPanel/TextPanel';
 
 function App() {
   return (
     <>
-      <style>
-        {`
-          .textPanelImportantStyle {
-            height: 50vh !important;
-          }
-        `}
-      </style>
-      <TextPanel className="textPanelImportantStyle" />
+      <div className="grid grid-cols-2 gap-6">
+        <TextPanel
+          className="h-[50vh]"
+          placeholder="Place original text here..."
+        />
+        <TextPanel
+          className="h-[50vh]"
+          placeholder="Place changed text here..."
+        />
+      </div>
     </>
   );
 }
