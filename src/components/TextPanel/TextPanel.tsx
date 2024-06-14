@@ -28,12 +28,11 @@ const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div
           id="lineNumbers"
           ref={lineNumbersRef}
-          className="absolute top-0 left-0 w-12 h-full border-r border-input bg-background text-sm text-muted-foreground flex flex-col items-center overflow-hidden"
+          className="absolute top-0 left-0 w-12 h-full border-r border-input bg-background bg-slate-600 text-lg text-muted-foreground flex flex-col items-center overflow-hidden"
           style={{
             paddingTop: '0.5rem',
             paddingBottom: '0.5rem',
             lineHeight: '1.5rem',
-            backgroundColor: 'grey',
             color: 'white',
           }}
         >
@@ -49,7 +48,7 @@ const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         </div>
         <textarea
           className={cn(
-            'flex-1 min-h-[80px] w-full pl-14 pr-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'flex-1 min-h-[80px] w-full pl-14 pr-3 py-2 rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-lg',
             className
           )}
           ref={textareaRef}
