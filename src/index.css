@@ -72,6 +72,6 @@
     }
     body {
       @apply bg-background text-foreground;
-      @apply bg-blue-100;
+      @apply bg-black;
     }
   }
