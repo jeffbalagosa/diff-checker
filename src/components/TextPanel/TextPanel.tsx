@@ -28,12 +28,11 @@ const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div
           id="lineNumbers"
           ref={lineNumbersRef}
-          className="absolute top-0 left-0 w-12 h-full border-r border-input bg-background bg-slate-600 text-lg text-muted-foreground flex flex-col items-center overflow-hidden"
+          className="absolute top-0 left-0 w-12 h-full border-r border-input bg-background bg-slate-600 text-lg text-muted-foreground flex flex-col items-center overflow-hidden text-white"
           style={{
             paddingTop: '0.5rem',
             paddingBottom: '0.5rem',
             lineHeight: '1.5rem',
-            color: 'white',
           }}
         >
           {Array.from({ length: lineCount }).map((_, i) => (
