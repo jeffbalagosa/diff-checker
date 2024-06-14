@@ -27,7 +27,7 @@ const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <div
           ref={lineNumbersRef}
           className="absolute top-0 left-0 w-10 h-full border-r border-input bg-background text-sm text-muted-foreground flex flex-col items-center overflow-hidden"
-          style={{ lineHeight: "1.5", paddingTop: "2px" }}
+          style={{ lineHeight: "1rem", paddingTop: ".71rem", backgroundColor: "grey", color: "white", fontSize: "1.5"}}
         >
           {Array.from({ length: lineCount }).map((_, i) => (
             <span key={i} className="leading-5 select-none text-right w-full px-1">
