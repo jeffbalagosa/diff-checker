@@ -43,10 +43,14 @@ function App() {
           Compare
         </Button>
       </div>
-      <ResultsPanels
-        originalTextInput={originalTextInput}
-        changedTextInput={changedTextInput}
-      />
+      <div>
+        {showResults && (
+          <ResultsPanels
+            originalTextInput={originalTextInput}
+            changedTextInput={changedTextInput}
+          />
+        )}
+      </div>
     </>
   );
 }
