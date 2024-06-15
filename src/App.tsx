@@ -8,9 +8,14 @@ import ResultsPanels from './components/Containers/ResultsPanels/ResultsPanels';
 function App() {
   const [showResults, setShowResults] = useState(false);
   const [originalTextInput, setOriginalTextInput] = useState('');
+  const [changedTextInput, setChangedTextInput] = useState('');
 
   const handleOriginalInputChange = (input: string) => {
     setOriginalTextInput(input);
+  };
+
+  const handleChangedInputChange = (input: string) => {
+    setChangedTextInput(input);
   };
 
   const handleClick = () => {
@@ -26,7 +31,10 @@ function App() {
       <h1 className="text-orange-400 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl p-5">
         Simple Diff Checker
       </h1>
-      <TextPanels onOriginalInputChange={handleOriginalInputChange} />
+      <TextPanels
+        onOriginalInputChange={handleOriginalInputChange}
+        onChangedInputChange={handleChangedInputChange}
+      />
       <div className="flex justify-center mt-6">
         <Button
           className="bg-orange-400 text-black text-lg hover:bg-orange-500"
@@ -35,7 +43,10 @@ function App() {
           Compare
         </Button>
       </div>
-      <ResultsPanels originalTextInput={originalTextInput} />
+      <ResultsPanels
+        originalTextInput={originalTextInput}
+        changedTextInput={changedTextInput}
+      />
     </>
   );
 }
