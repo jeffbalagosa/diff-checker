@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { TextPanel } from '@/components/TextPanel/TextPanel';
+import { Button } from './components/ui/button';
 
 function App() {
   return (
@@ -17,6 +18,11 @@ function App() {
           className="h-[50vh]"
           placeholder="Place changed text here..."
         />
+      </div>
+      <div className="flex justify-center mt-6">
+        <Button className="bg-orange-400 text-black text-lg hover:bg-orange-500">
+          Compare
+        </Button>
       </div>
     </>
   );
