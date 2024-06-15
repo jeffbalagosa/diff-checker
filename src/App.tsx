@@ -8,7 +8,6 @@ import ResultsPanels from './components/Containers/ResultsPanels/ResultsPanels';
 function App() {
   const [showResults, setShowResults] = useState(false);
   const [originalTextInput, setOriginalTextInput] = useState('');
-  console.log(originalTextInput);
 
   const handleOriginalInputChange = (input: string) => {
     setOriginalTextInput(input);
@@ -36,7 +35,7 @@ function App() {
           Compare
         </Button>
       </div>
-      {showResults && <ResultsPanels />}
+      <ResultsPanels originalTextInput={originalTextInput} />
     </>
   );
 }
