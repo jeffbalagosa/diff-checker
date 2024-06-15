@@ -2,7 +2,9 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  onInputChange?: (value: string) => void;
+}
 
 const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
@@ -21,6 +23,7 @@ const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const lineNumbers = e.currentTarget.value.split('\n').length;
       setLineCount(lineNumbers);
+      props.onInputChange?.(e.currentTarget.value);
     };
 
     return (

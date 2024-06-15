@@ -7,6 +7,12 @@ import ResultsPanels from './components/Containers/ResultsPanels/ResultsPanels';
 
 function App() {
   const [showResults, setShowResults] = useState(false);
+  const [originalTextInput, setOriginalTextInput] = useState('');
+  console.log(originalTextInput);
+
+  const handleOriginalInputChange = (input: string) => {
+    setOriginalTextInput(input);
+  };
 
   const handleClick = () => {
     if (showResults) {
@@ -21,9 +27,12 @@ function App() {
       <h1 className="text-orange-400 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl p-5">
         Simple Diff Checker
       </h1>
-      <TextPanels />
+      <TextPanels onOriginalInputChange={handleOriginalInputChange} />
       <div className="flex justify-center mt-6">
-        <Button className="bg-orange-400 text-black text-lg hover:bg-orange-500" onClick={handleClick}>
+        <Button
+          className="bg-orange-400 text-black text-lg hover:bg-orange-500"
+          onClick={handleClick}
+        >
           Compare
         </Button>
       </div>
