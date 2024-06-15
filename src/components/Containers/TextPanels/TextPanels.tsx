@@ -1,11 +1,11 @@
 import React from 'react';
 import { TextPanel } from '../../TextPanel/TextPanel';
 
-const TextPanels = ({
-  onOriginalInputChange,
-}: {
+interface TextPanelsProps {
   onOriginalInputChange: (value: string) => void;
-}) => {
+}
+
+const TextPanels: React.FC<TextPanelsProps> = ({ onOriginalInputChange }) => {
   const handleInputChange = (value: string) => {
     onOriginalInputChange(value);
   };
