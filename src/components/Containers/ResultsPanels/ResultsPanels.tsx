@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LineNumbers from '@/components/LineNumbers/LineNumbers';
+import ResultPanel from '@/components/ResultPanel/ResultPanel';
 
 interface ResultsPanelsProps {
   originalTextInput: string;
@@ -13,9 +13,6 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
   const [originalScrollTop, setOriginalScrollTop] = useState(0);
   const [changedScrollTop, setChangedScrollTop] = useState(0);
 
-  const originalLineCount = originalTextInput.split('\n').length;
-  const changedLineCount = changedTextInput.split('\n').length;
-
   const handleOriginalScroll = (e: React.UIEvent<HTMLDivElement>) => {
     setOriginalScrollTop(e.currentTarget.scrollTop);
   };
@@ -26,50 +23,18 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
 
   return (
     <div className="grid grid-cols-2 gap-6">
-      <div>
-        <h2 className="font-bold mb-4 text-orange-400 bg-black text-2xl">
-          Original Text:
-        </h2>
-        <div className="relative border bg-gray-100 overflow-hidden">
-          <LineNumbers
-            lineCount={originalLineCount}
-            scrollTop={originalScrollTop}
-          />
-          <div
-            className="relative overflow-hidden pl-12 p-2 text-lg"
-            style={{
-              whiteSpace: 'pre-wrap',
-              textAlign: 'left',
-              lineHeight: '1.5rem',
-            }}
-            onScroll={handleOriginalScroll}
-          >
-            {originalTextInput}
-          </div>
-        </div>
-      </div>
-      <div>
-        <h2 className="font-bold mb-4 text-orange-400 bg-black text-2xl">
-          Changed Text:
-        </h2>
-        <div className="relative border bg-gray-100 overflow-hidden">
-          <LineNumbers
-            lineCount={changedLineCount}
-            scrollTop={changedScrollTop}
-          />
-          <div
-            className="relative overflow-hidden pl-12 pt-2 text-lg"
-            style={{
-              whiteSpace: 'pre-wrap',
-              textAlign: 'left',
-              lineHeight: '1.5rem',
-            }}
-            onScroll={handleChangedScroll}
-          >
-            {changedTextInput}
-          </div>
-        </div>
-      </div>
+      <ResultPanel
+        title="Original Text:"
+        textInput={originalTextInput}
+        scrollTop={originalScrollTop}
+        onScroll={handleOriginalScroll}
+      />
+      <ResultPanel
+        title="Changed Text:"
+        textInput={changedTextInput}
+        scrollTop={changedScrollTop}
+        onScroll={handleChangedScroll}
+      />
     </div>
   );
 };
