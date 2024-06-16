@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import LineNumbers from '../LineNumbers/LineNumbers';
 
 export interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -9,15 +10,13 @@ export interface TextareaProps
 const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, ...props }, ref) => {
     const [lineCount, setLineCount] = React.useState(1);
+    const [scrollTop, setScrollTop] = React.useState(0);
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-    const lineNumbersRef = React.useRef<HTMLDivElement>(null);
 
     React.useImperativeHandle(ref, () => textareaRef.current!);
 
     const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
-      if (lineNumbersRef.current) {
-        lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
-      }
+      setScrollTop(e.currentTarget.scrollTop);
     };
 
     const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -28,26 +27,7 @@ const TextPanel = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div className="relative w-full flex">
-        <div
-          id="lineNumbers"
-          ref={lineNumbersRef}
-          className="absolute top-0 left-0 w-12 h-full border-r border-input bg-background bg-slate-600 text-lg text-muted-foreground flex flex-col items-center overflow-hidden text-white"
-          style={{
-            paddingTop: '0.5rem',
-            paddingBottom: '0.5rem',
-            lineHeight: '1.5rem',
-          }}
-        >
-          {Array.from({ length: lineCount }).map((_, i) => (
-            <span
-              key={i}
-              className="select-none text-right w-full px-1"
-              style={{ height: '1.5rem' }}
-            >
-              {i + 1}
-            </span>
-          ))}
-        </div>
+        <LineNumbers lineCount={lineCount} scrollTop={scrollTop} />
         <textarea
           className={cn(
             'flex-1 min-h-[80px] w-full pl-14 pr-3 py-2 rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-lg',
