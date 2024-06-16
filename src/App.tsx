@@ -35,7 +35,7 @@ function App() {
         onOriginalInputChange={handleOriginalInputChange}
         onChangedInputChange={handleChangedInputChange}
       />
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-6 mb-6">
         <Button
           className="bg-orange-400 text-black text-lg hover:bg-orange-500"
           onClick={handleClick}
