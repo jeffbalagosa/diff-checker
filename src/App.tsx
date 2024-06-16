@@ -19,11 +19,7 @@ function App() {
   };
 
   const handleClick = () => {
-    if (showResults) {
-      setShowResults(false);
-    } else {
-      setShowResults(true);
-    }
+    setShowResults((prev) => !prev);
   };
 
   return (
