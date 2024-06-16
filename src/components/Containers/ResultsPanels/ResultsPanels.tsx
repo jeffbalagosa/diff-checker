@@ -25,9 +25,9 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-2 gap-6 p-5">
+    <div className="grid grid-cols-2 gap-6">
       <div>
-        <h2 className="font-bold mb-2 text-orange-400 bg-black">
+        <h2 className="font-bold mb-4 text-orange-400 bg-black text-2xl">
           Original Text:
         </h2>
         <div className="relative border bg-gray-100 overflow-hidden">
@@ -49,7 +49,7 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
         </div>
       </div>
       <div>
-        <h2 className="font-bold mb-2 text-orange-400 bg-black">
+        <h2 className="font-bold mb-4 text-orange-400 bg-black text-2xl">
           Changed Text:
         </h2>
         <div className="relative border bg-gray-100 overflow-hidden">
