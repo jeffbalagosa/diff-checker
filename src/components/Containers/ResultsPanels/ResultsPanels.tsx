@@ -25,19 +25,23 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-2 gap-6 p-5 relative">
+    <div className="grid grid-cols-2 gap-6 p-5">
       <div>
         <h2 className="font-bold mb-2 text-orange-400 bg-black">
           Original Text:
         </h2>
-        <div className="border p-3 bg-gray-100 relative overflow-hidden">
+        <div className="relative border bg-gray-100 overflow-hidden">
           <LineNumbers
             lineCount={originalLineCount}
             scrollTop={originalScrollTop}
           />
           <div
-            className="relative overflow-auto pl-12"
-            style={{ whiteSpace: 'pre-wrap', textAlign: 'left' }}
+            className="relative overflow-hidden pl-12 p-2 text-lg"
+            style={{
+              whiteSpace: 'pre-wrap',
+              textAlign: 'left',
+              lineHeight: '1.5rem',
+            }}
             onScroll={handleOriginalScroll}
           >
             {originalTextInput}
@@ -48,14 +52,18 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
         <h2 className="font-bold mb-2 text-orange-400 bg-black">
           Changed Text:
         </h2>
-        <div className="border p-3 bg-gray-100 relative overflow-hidden">
+        <div className="relative border bg-gray-100 overflow-hidden">
           <LineNumbers
             lineCount={changedLineCount}
             scrollTop={changedScrollTop}
           />
           <div
-            className="relative overflow-auto pl-12"
-            style={{ whiteSpace: 'pre-wrap', textAlign: 'left' }}
+            className="relative overflow-hidden pl-12 pt-2 text-lg"
+            style={{
+              whiteSpace: 'pre-wrap',
+              textAlign: 'left',
+              lineHeight: '1.5rem',
+            }}
             onScroll={handleChangedScroll}
           >
             {changedTextInput}
