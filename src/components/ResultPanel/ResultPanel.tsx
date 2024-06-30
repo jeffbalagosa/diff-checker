@@ -4,6 +4,7 @@ import LineNumbers from '@/components/LineNumbers/LineNumbers';
 interface ResultPanelProps {
   title: string;
   textInput: string;
+  compareText: string;
   scrollTop: number;
   onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
 }
@@ -11,11 +12,27 @@ interface ResultPanelProps {
 const ResultPanel: React.FC<ResultPanelProps> = ({
   title,
   textInput,
+  compareText,
   scrollTop,
   onScroll,
 }) => {
-  const splitLines = textInput.split('\n');
-  const lineCount = splitLines.length;
+  const splitTextInput = textInput.split('\n');
+  const splitCompareText = compareText.split('\n');
+  const lineCount = splitTextInput.length;
+
+  const splitTextInputWithCompare = splitTextInput.map((line, index) => {
+    const className =
+      line !== splitCompareText[index]
+        ? title === 'Changed Text:'
+          ? 'bg-green-100'
+          : 'bg-red-100'
+        : '';
+    return (
+      <div key={index} className={className}>
+        {line}
+      </div>
+    );
+  });
 
   return (
     <div>
@@ -33,9 +50,7 @@ const ResultPanel: React.FC<ResultPanelProps> = ({
           }}
           onScroll={onScroll}
         >
-          {splitLines.map((line, index) => (
-            <div key={index}>{line}</div>
-          ))}
+          {splitTextInputWithCompare}
         </div>
       </div>
     </div>
