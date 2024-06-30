@@ -14,7 +14,8 @@ const ResultPanel: React.FC<ResultPanelProps> = ({
   scrollTop,
   onScroll,
 }) => {
-  const lineCount = textInput.split('\n').length;
+  const splitLines = textInput.split('\n');
+  const lineCount = splitLines.length;
 
   return (
     <div>
@@ -32,7 +33,9 @@ const ResultPanel: React.FC<ResultPanelProps> = ({
           }}
           onScroll={onScroll}
         >
-          {textInput}
+          {splitLines.map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
         </div>
       </div>
     </div>
