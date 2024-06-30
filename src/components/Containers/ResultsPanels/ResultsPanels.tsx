@@ -26,6 +26,7 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
       <ResultPanel
         title="Original Text:"
         textInput={originalTextInput}
+        compareText={changedTextInput}
         scrollTop={originalScrollTop}
         onScroll={handleOriginalScroll}
       />
@@ -33,6 +34,7 @@ const ResultsPanels: React.FC<ResultsPanelsProps> = ({
         title="Changed Text:"
         textInput={changedTextInput}
         scrollTop={changedScrollTop}
+        compareText={originalTextInput}
         onScroll={handleChangedScroll}
       />
     </div>
